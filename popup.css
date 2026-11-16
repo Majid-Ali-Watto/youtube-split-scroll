@@ -59,3 +59,22 @@ a {
 }
 
 a:hover, a:focus-visible { border-color: var(--accent); outline: none; }
+
+footer {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 14px;
+}
+
+footer a {
+    display: inline;
+    padding: 0;
+    border: 0;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 400;
+    text-decoration: underline;
+}
+
+footer a:hover, footer a:focus-visible { color: var(--accent); }
