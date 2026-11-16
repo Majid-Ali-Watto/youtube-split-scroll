@@ -12,6 +12,12 @@
         <p>Comments left, independent scrolling, docked player.</p>
     </header>
 
+    <div class="switch" role="group" aria-label="Extension state">
+        <button type="button" id="enable" aria-pressed="true">Enable</button>
+        <button type="button" id="disable" aria-pressed="false">Disable</button>
+    </div>
+    <p id="status" class="status" aria-live="polite"></p>
+
     <section>
         <h2>Majid Ali</h2>
         <p class="role">Full Stack Web Developer · Islamabad, PK</p>
@@ -27,5 +33,6 @@
         <a href="https://github.com/Majid-Ali-Watto/youtube-split-scroll/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer">Privacy</a>
         <a href="https://github.com/Majid-Ali-Watto/youtube-split-scroll/blob/main/TERMS.md" target="_blank" rel="noopener noreferrer">Terms</a>
     </footer>
+    <script src="popup.js"></script>
 </body>
 </html>

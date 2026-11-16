@@ -18,6 +18,9 @@
       "32": "icons/icon32.png"
     }
   },
+  "permissions": [
+    "storage"
+  ],
   "content_scripts": [
     {
       "matches": [

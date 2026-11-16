@@ -24,6 +24,8 @@ right column) while you read comments.
   player, video title and channel/subscribe/like row dock to the top of the
   right column at its width. Suggested videos scroll beneath them. Scrolling
   back up returns them to the left column.
+- Click the toolbar icon to **Enable** or **Disable** it; the change applies to
+  open YouTube tabs immediately, with no reload, and is remembered.
 - Only the standard two-column view is changed. Theater mode, fullscreen and
   the narrow single-column layout keep YouTube's default behaviour.
 
@@ -74,7 +76,7 @@ Click the reload icon on the extension's card (Firefox: **Reload** in
 | `content.js`    | Moves comments, docks/undocks the player and details.    |
 | `styles.css`    | Independent-scroll layout and docked-stack styles.       |
 | `icons/` | Extension icons (PNG sizes + `icon.svg` source). |
-| `popup.html`, `popup.css` | Toolbar popup with developer details and links. |
+| `popup.html`, `popup.css`, `popup.js` | Toolbar popup: enable/disable switch, developer details, links. |
 | `PRIVACY.md`, `TERMS.md` | Privacy policy and terms of use. |
 
 ## Developer
