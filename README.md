@@ -1,5 +1,20 @@
 # YouTube Split Scroll: Comments Left & Docked Player
 
+## The problem it solves
+
+YouTube's watch page makes you choose between the video and the conversation:
+
+- **Comments end up in the wrong place.** They get pushed over to the right
+  side of the page, mixed in with the suggested videos, instead of sitting
+  under the video where you expect them.
+- **Everything scrolls as one page.** Reading comments scrolls the player,
+  title and Like/Subscribe buttons out of sight, and scrolling the suggested
+  videos drags the rest of the page along with it.
+
+This extension puts the comments back under the video, gives each side its own
+scrollbar, and keeps the player, title and actions on screen (docked in the
+right column) while you read comments.
+
 ## What it does (on YouTube watch pages)
 
 - Moves the comments back to the left column, under the video.
