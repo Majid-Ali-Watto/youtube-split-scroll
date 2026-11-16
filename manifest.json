@@ -4,6 +4,10 @@
   "version": "1.1",
   "description": "Comments in the left column with independent scrolling; the player, title and actions dock to the right as you scroll.",
   "homepage_url": "https://majidev.netlify.app",
+  "action": {
+    "default_title": "YouTube Split Scroll",
+    "default_popup": "popup.html"
+  },
   "content_scripts": [
     {
       "matches": [
