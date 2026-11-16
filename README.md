@@ -74,6 +74,7 @@ Click the reload icon on the extension's card (Firefox: **Reload** in
 | `content.js`    | Moves comments, docks/undocks the player and details.    |
 | `styles.css`    | Independent-scroll layout and docked-stack styles.       |
 | `popup.html`, `popup.css` | Toolbar popup with developer details and links. |
+| `PRIVACY.md`, `TERMS.md` | Privacy policy and terms of use. |
 
 ## Developer
 
@@ -90,3 +91,6 @@ Found a bug or have an idea? [Open an issue](https://github.com/Majid-Ali-Watto/
 ## License
 
 MIT, see [LICENSE](LICENSE).
+
+- [Privacy Policy](PRIVACY.md)
+- [Terms of Use](TERMS.md)
