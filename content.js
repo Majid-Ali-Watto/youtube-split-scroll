@@ -2,9 +2,20 @@
 // Author: Majid Ali (https://majidev.netlify.app)
 // License: MIT
 
+/*
+ * On/off switch, set from the toolbar popup and stored in chrome.storage.local.
+ * Starts off until the stored value has been read, then applyEnabled() sets the
+ * real state; changes from the popup apply immediately (see onChanged below).
+ */
+let enabled = false;
+
 function isWatchPage() {
     return location.pathname === '/watch';
 }
+
+// Where each moved #comments element lived, so turning the extension off can
+// put it back exactly where YouTube had it.
+const commentsHome = new WeakMap();
 
 function moveCommentsToLeft() {
     const watchFlexy = document.querySelector('ytd-watch-flexy');
@@ -14,7 +25,17 @@ function moveCommentsToLeft() {
     const comments = watchFlexy.querySelector('#comments');
 
     if (primaryInner && comments && comments.parentElement !== primaryInner) {
+        commentsHome.set(comments, { parent: comments.parentElement, next: comments.nextSibling });
         primaryInner.appendChild(comments);
+    }
+}
+
+function restoreComments() {
+    const comments = document.querySelector('ytd-watch-flexy #comments');
+    const home = comments && commentsHome.get(comments);
+    if (home?.parent.isConnected) {
+        home.parent.insertBefore(comments, home.next?.parentNode === home.parent ? home.next : null);
+        commentsHome.delete(comments);
     }
 }
 
@@ -69,7 +90,7 @@ function updateDock() {
     const playerRect = player?.getBoundingClientRect();
 
     const shouldDock = Boolean(
-        isWatchPage() && flexy && secondary && player
+        enabled && isWatchPage() && flexy && secondary && player
         && isDefaultTwoColumn(flexy)
         // An unrendered player reports a zero rect; never dock on that.
         && playerRect.height > 0
@@ -124,7 +145,7 @@ function scheduleDockUpdate() {
 }
 
 function applyLayout() {
-    const watching = isWatchPage();
+    const watching = enabled && isWatchPage();
     const root = document.documentElement;
 
     if (watching && !root.classList.contains('ycl-watch')) {
@@ -137,8 +158,19 @@ function applyLayout() {
     if (watching) {
         moveCommentsToLeft();
         observeDockParts();
+    } else if (!enabled) {
+        restoreComments();
     }
     scheduleDockUpdate();
+}
+
+function applyEnabled(value) {
+    if (enabled === value) return;
+    enabled = value;
+    applyLayout();
+    // Undock/dock now rather than on the next frame so the switch is instant.
+    updateDock();
+    window.dispatchEvent(new Event('resize'));
 }
 
 function resetPaneScroll() {
@@ -149,7 +181,7 @@ function resetPaneScroll() {
 
 // YouTube renders comments lazily; re-check whenever the DOM changes.
 const observer = new MutationObserver(() => {
-    if (isWatchPage()) {
+    if (enabled && isWatchPage()) {
         moveCommentsToLeft();
         observeDockParts();
     }
@@ -169,6 +201,10 @@ document.addEventListener('fullscreenchange', scheduleDockUpdate);
 
 window.addEventListener('yt-navigate-finish', () => {
     applyLayout();
-    if (isWatchPage()) resetPaneScroll();
+    if (enabled && isWatchPage()) resetPaneScroll();
 });
-applyLayout();
+
+chrome.storage.local.get({ enabled: true }, (stored) => applyEnabled(stored.enabled));
+chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && changes.enabled) applyEnabled(changes.enabled.newValue !== false);
+});

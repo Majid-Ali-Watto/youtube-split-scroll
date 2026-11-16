@@ -19,12 +19,15 @@ you are already viewing.
 - **Collected:** none. The extension does not read your account, watch history,
   comments or any other content for any purpose beyond positioning page
   elements.
-- **Stored:** nothing. It does not use cookies, local storage or any other
-  storage.
+- **Stored:** one on/off setting (whether the extension is enabled), kept in
+  your browser's local extension storage so your choice is remembered. It stays
+  on your device and contains no personal information. The extension uses no
+  cookies.
 - **Sent anywhere:** nothing. It makes no network requests, has no analytics
   or tracking, and uses no remote code or third-party services.
-- **Permissions:** the extension requests no browser permissions. It only
-  injects its script and stylesheet into YouTube watch pages.
+- **Permissions:** `storage`, used only to remember the on/off setting above.
+  The extension also injects its script and stylesheet into YouTube watch pages
+  (`www.youtube.com`).
 
 ## Links
 
