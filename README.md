@@ -73,6 +73,7 @@ Click the reload icon on the extension's card (Firefox: **Reload** in
 | `manifest.json` | Extension definition (Manifest V3, YouTube content script). |
 | `content.js`    | Moves comments, docks/undocks the player and details.    |
 | `styles.css`    | Independent-scroll layout and docked-stack styles.       |
+| `icons/` | Extension icons (PNG sizes + `icon.svg` source). |
 | `popup.html`, `popup.css` | Toolbar popup with developer details and links. |
 | `PRIVACY.md`, `TERMS.md` | Privacy policy and terms of use. |
 
