@@ -3,6 +3,7 @@
   "name": "YouTube Split Scroll: Comments Left & Docked Player",
   "version": "1.1",
   "description": "Comments in the left column with independent scrolling; the player, title and actions dock to the right as you scroll.",
+  "homepage_url": "https://majidev.netlify.app",
   "content_scripts": [
     {
       "matches": [

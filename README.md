@@ -73,3 +73,19 @@ Click the reload icon on the extension's card (Firefox: **Reload** in
 | `manifest.json` | Extension definition (Manifest V3, YouTube content script). |
 | `content.js`    | Moves comments, docks/undocks the player and details.    |
 | `styles.css`    | Independent-scroll layout and docked-stack styles.       |
+
+## Developer
+
+**Majid Ali** is a Full Stack Web Developer based in Islamabad, Pakistan,
+working with Vue.js, Nuxt.js, React and TypeScript on the frontend and
+Python/FastAPI microservices (gRPC, Kafka, MSSQL, Redis, Docker) on the backend.
+
+- Portfolio: [majidev.netlify.app](https://majidev.netlify.app)
+- GitHub: [Majid-Ali-Watto](https://github.com/Majid-Ali-Watto)
+- LinkedIn: [majid-ali-074b97245](https://www.linkedin.com/in/majid-ali-074b97245/)
+
+Found a bug or have an idea? [Open an issue](https://github.com/Majid-Ali-Watto/youtube-split-scroll/issues).
+
+## License
+
+MIT, see [LICENSE](LICENSE).
