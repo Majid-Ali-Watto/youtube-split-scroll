@@ -1,0 +1,226 @@
+/*
+ * Watch-page layout: the window never scrolls. The left column (player +
+ * comments) and the right column (suggested videos) are independent scroll
+ * panes filling the space below the masthead.
+ *
+ * Applies only to the standard two-column view; theater, fullscreen and
+ * narrow single-column layouts keep YouTube's default behaviour.
+ */
+
+/* Lock window scroll on watch pages (class toggled by content.js). */
+html.ycl-watch,
+html.ycl-watch body {
+    overflow: hidden !important;
+}
+
+html.ycl-watch ytd-watch-flexy[is-two-columns_]:not([theater]):not([fullscreen]) #columns {
+    height: calc(100vh - var(--ytd-masthead-height, 56px)) !important;
+    overflow: hidden !important;
+}
+
+html.ycl-watch ytd-watch-flexy[is-two-columns_]:not([theater]):not([fullscreen]) #primary,
+html.ycl-watch ytd-watch-flexy[is-two-columns_]:not([theater]):not([fullscreen]) #secondary {
+    height: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    padding-bottom: 40px !important;
+}
+
+/*
+ * Docked stack (class toggled by content.js once 90% of the player is scrolled
+ * out of the left pane): player, then title, then the channel/subscribe/like
+ * row, pinned over the top of the right column at its width. The player's
+ * height follows its aspect ratio; content.js publishes each part's height so
+ * the parts stack and the right column shrinks by their total, letting
+ * suggestions scroll beneath them.
+ */
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary #player-container-outer,
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title,
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row {
+    position: fixed !important;
+    left: var(--ycl-dock-left) !important;
+    width: var(--ycl-dock-width) !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    z-index: 1;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary #player-container-outer {
+    top: var(--ycl-dock-top) !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary #player-container-inner {
+    min-width: 0 !important;
+    min-height: 0 !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title,
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row {
+    padding: 8px 0 0 !important;
+    /* Nothing scrolls beneath the stack, so the page background shows through. */
+    background: transparent !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title {
+    top: calc(var(--ycl-dock-top) + var(--ycl-player-h, 0px)) !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row {
+    top: calc(var(--ycl-dock-top) + var(--ycl-player-h, 0px) + var(--ycl-title-h, 0px)) !important;
+    /* Channel, Subscribe and buttons on a single row. */
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 8px;
+    /* Gap between the docked stack and the suggestions below it. */
+    padding-bottom: 12px !important;
+}
+
+/* Docked title: match the suggested-video titles in the right column. */
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title h1 {
+    font-size: 1.4rem !important;
+    line-height: 2rem !important;
+    font-weight: 500 !important;
+}
+
+/*
+ * Docked channel/subscribe/like row: scale its contents down. Zoom goes on the
+ * children, not #top-row itself, so the fixed position and width variables
+ * aren't scaled too.
+ */
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row > * {
+    zoom: 0.85;
+}
+
+/*
+ * Single row in the narrow column: the channel block may shrink (its name and
+ * subscriber count truncate), the buttons keep their size at the right end.
+ */
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    margin-right: 0 !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #upload-info {
+    min-width: 0 !important;
+    overflow: hidden !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #upload-info * {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions {
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions-inner,
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions ytd-menu-renderer {
+    margin: 0 !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy[is-two-columns_]:not([theater]):not([fullscreen]) #secondary {
+    --ycl-stack-h: calc(var(--ycl-player-h, 0px) + var(--ycl-title-h, 0px) + var(--ycl-toprow-h, 0px));
+    margin-top: var(--ycl-stack-h) !important;
+    height: calc(100% - var(--ycl-stack-h)) !important;
+}
+
+/* Docked Subscribe button: compact pill like YouTube's small buttons. */
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #subscribe-button button {
+    height: 28px !important;
+    padding: 0 12px !important;
+    font-size: 1.2rem !important;
+    line-height: 28px !important;
+}
+
+/* Docked like/dislike, share, download and menu buttons: compact, matching Subscribe. */
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row button:not(#subscribe-button button) {
+    height: 28px !important;
+    min-width: 28px !important;
+    padding: 0 10px !important;
+    font-size: 1.2rem !important;
+    line-height: 28px !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row button:not(#subscribe-button button).yt-spec-button-shape-next--icon-button {
+    width: 28px !important;
+    padding: 0 !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row button:not(#subscribe-button button) .yt-spec-button-shape-next__icon {
+    width: 18px !important;
+    height: 18px !important;
+}
+
+/* Docked title: at most two lines, ending with an ellipsis. */
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title h1 {
+    max-height: 4rem !important; /* 2 lines x 2rem line-height */
+    overflow: hidden !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title h1 yt-formatted-string {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2;
+    overflow: hidden !important;
+    white-space: normal !important;
+}
+
+/* Docked channel avatar: compact, matching the smaller buttons. */
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #avatar,
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #avatar img {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #avatar {
+    margin-right: 8px !important;
+}
+
+/* Docked buttons are icon-only: hide the like count and any button labels. */
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row .yt-spec-button-shape-next__button-text-content:not(#subscribe-button *) {
+    display: none !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row button:not(#subscribe-button button) .yt-spec-button-shape-next__icon {
+    margin: 0 !important;
+}
+
+/* Docked channel row: center every item vertically on the row's midline. */
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner,
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row ytd-video-owner-renderer,
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions,
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions-inner,
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions ytd-menu-renderer,
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #top-level-buttons-computed {
+    display: flex !important;
+    align-items: center !important;
+}
+
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner > *,
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row ytd-video-owner-renderer > *,
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #subscribe-button {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/*
+ * Center the row's direct children (channel block, buttons block) whatever
+ * YouTube names them, and drop their own vertical margins/offsets.
+ */
+html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row > * {
+    align-self: center !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
