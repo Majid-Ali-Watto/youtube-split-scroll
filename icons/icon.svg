@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <rect width="128" height="128" rx="28" fill="#0d9488"/>
+  <!-- left column: comments -->
+  <rect x="16" y="22" width="50" height="14" rx="7" fill="#fff"/>
+  <rect x="16" y="48" width="50" height="14" rx="7" fill="#fff"/>
+  <rect x="16" y="74" width="50" height="14" rx="7" fill="#fff"/>
+  <rect x="16" y="100" width="34" height="14" rx="7" fill="#fff"/>
+  <!-- right column: docked player + suggestions -->
+  <rect x="76" y="18" width="36" height="28" rx="6" fill="#fff"/>
+  <path d="M90 25 L90 39 L102 32 Z" fill="#0d9488"/>
+  <rect x="76" y="58" width="36" height="10" rx="5" fill="#fff" fill-opacity=".6"/>
+  <rect x="76" y="78" width="36" height="10" rx="5" fill="#fff" fill-opacity=".6"/>
+  <rect x="76" y="98" width="36" height="10" rx="5" fill="#fff" fill-opacity=".6"/>
+</svg>
