@@ -1,3 +1,7 @@
+// YouTube Split Scroll
+// Author: Majid Ali (https://majidev.netlify.app)
+// License: MIT
+
 function isWatchPage() {
     return location.pathname === '/watch';
 }
