@@ -12,6 +12,12 @@
 - Only the standard two-column view is changed. Theater mode, fullscreen and
   the narrow single-column layout keep YouTube's default behaviour.
 
+## Screenshots
+
+| Player at the top, right column scrolls independently | Scrolled down to the comments (player docked right) |
+| --- | --- |
+| ![Video player at the top of the left column while the suggested videos on the right scroll independently](docs/screenshots/top.png) | ![Comments on the left, player, title and actions docked above the suggestions on the right](docs/screenshots/docked.png) |
+
 ## Supported browsers
 
 - Chromium-based desktop browsers: Google Chrome, Microsoft Edge, Brave,
