@@ -11,7 +11,8 @@
     "build": "web-ext build --overwrite-dest --filename youtube-split-scroll-{version}.zip",
     "test": "playwright test",
     "test:install": "playwright install chromium",
-    "check-version": "node scripts/check-version.js"
+    "check-version": "node scripts/check-version.js",
+    "icons": "node scripts/build-icons.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
