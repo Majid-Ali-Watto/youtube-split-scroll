@@ -7,32 +7,139 @@
     <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-    <header>
-        <h1>YouTube Split Scroll</h1>
-        <p>Comments left, independent scrolling, docked player.</p>
+    <header class="hero">
+        <img class="logo" src="icons/icon128.png" alt="" width="40" height="40">
+        <div class="hero-title">
+            <h1><span data-i18n="extName">YouTube Split Scroll</span> <span class="pill" id="version"></span></h1>
+            <p class="status" id="status" aria-live="polite"><span class="dot" aria-hidden="true"></span><span id="status-text"></span></p>
+        </div>
+        <input type="checkbox" role="switch" id="enabled" class="switch switch-lg"
+            data-i18n-aria-label="stateGroupLabel" aria-label="Turn YouTube Split Scroll on or off">
     </header>
 
-    <div class="switch" role="group" aria-label="Extension state">
-        <button type="button" id="enable" aria-pressed="true">Enable</button>
-        <button type="button" id="disable" aria-pressed="false">Disable</button>
-    </div>
-    <p id="status" class="status" aria-live="polite"></p>
+    <main>
+        <div id="stale-tab" class="notice" role="alert" hidden>
+            <svg class="notice-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2 21h20L12 3Zm0 6v5m0 3v.5"/></svg>
+            <div>
+                <p data-i18n="staleTab">This YouTube tab is still running the previous version, so your settings won't apply here until it's reloaded.</p>
+                <button type="button" id="reload-tab" data-i18n="reloadTab">Reload tab</button>
+            </div>
+        </div>
 
-    <section>
-        <h2>Majid Ali</h2>
-        <p class="role">Full Stack Web Developer · Islamabad, PK</p>
-        <ul>
-            <li><a href="https://majidev.netlify.app" target="_blank" rel="noopener noreferrer">Portfolio</a></li>
-            <li><a href="https://github.com/Majid-Ali-Watto/youtube-split-scroll" target="_blank" rel="noopener noreferrer">GitHub repo</a></li>
-            <li><a href="https://github.com/Majid-Ali-Watto" target="_blank" rel="noopener noreferrer">GitHub profile</a></li>
-            <li><a href="https://www.linkedin.com/in/majid-ali-074b97245/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-        </ul>
-    </section>
+        <fieldset id="settings" class="settings">
+            <legend class="visually-hidden" data-i18n="settingsHeading">Layout</legend>
+
+            <div class="card" role="group">
+                <label class="setting">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><rect x="12" y="7" width="6" height="5" rx="1" class="fill"/></svg>
+                    <span class="text">
+                        <span class="title" data-i18n="settingDock">Dock the player</span>
+                        <span class="desc" data-i18n="settingDockDesc">Keep the video visible while reading</span>
+                    </span>
+                    <input type="checkbox" role="switch" class="switch" data-setting="dock">
+                </label>
+
+                <div class="sub" id="dock-options">
+                    <label class="range">
+                        <span data-i18n="settingDockThresholdShort">Dock after</span>
+                        <input type="range" id="threshold" data-setting="dockThreshold" min="50" max="100" step="5">
+                        <output id="threshold-value" for="threshold">90%</output>
+                    </label>
+
+                    <div class="segmented" role="radiogroup" data-i18n-aria-label="settingDockParts" aria-label="Dock">
+                        <label>
+                            <input type="radio" name="dockParts" value="all" data-setting="dockParts">
+                            <span data-i18n="dockPartsAll">Player + details</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="dockParts" value="player" data-setting="dockParts">
+                            <span data-i18n="dockPartsPlayer">Player only</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" role="group">
+                <label class="setting">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h13m0 0-3-3m3 3-3 3M17 17H4m0 0 3-3m-3 3 3 3"/></svg>
+                    <span class="text">
+                        <span class="title" data-i18n="settingSwap">Suggestions on the left</span>
+                        <span class="desc" data-i18n="settingSwapDesc">Video and comments on the right</span>
+                    </span>
+                    <input type="checkbox" role="switch" class="switch" data-setting="swapSides">
+                </label>
+                <label class="setting">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16m0-16-4 4m4-4 4 4m-4 12-4-4m4 4 4-4"/></svg>
+                    <span class="text">
+                        <span class="title" data-i18n="settingJump">Jump button</span>
+                        <span class="desc" data-i18n="settingJumpDesc">Switch between video and comments</span>
+                    </span>
+                    <input type="checkbox" role="switch" class="switch" data-setting="jumpButtons">
+                </label>
+                <label class="setting">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="8" rx="1.5"/><path d="M2 16h11M2 20h11M16 16h6M16 20h6"/></svg>
+                    <span class="text">
+                        <span class="title" data-i18n="settingTheater">Theater mode split</span>
+                        <span class="desc" data-i18n="settingTheaterDesc">Columns scroll below the wide player</span>
+                    </span>
+                    <input type="checkbox" role="switch" class="switch" data-setting="theaterSplit">
+                </label>
+                <label class="setting">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M4 4l16 16"/></svg>
+                    <span class="text">
+                        <span class="title" data-i18n="settingHideShorts">Hide Shorts</span>
+                        <span class="desc" data-i18n="settingHideShortsDesc">Remove Shorts from suggestions</span>
+                    </span>
+                    <input type="checkbox" role="switch" class="switch" data-setting="hideShorts">
+                </label>
+                <div class="setting static">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M8 8l-4 4 4 4M16 8l4 4-4 4"/></svg>
+                    <span class="text">
+                        <span class="title"><span data-i18n="columnWidth">Suggestions width</span>: <strong id="width-value"></strong></span>
+                        <span class="desc" data-i18n="columnWidthHint">Drag the line between the columns</span>
+                    </span>
+                    <button type="button" id="reset-width" class="chip-button" data-i18n="columnWidthReset">Reset</button>
+                </div>
+                <div class="setting static">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg>
+                    <span class="text"><span class="title" data-i18n="shortcutLabel">Shortcut</span></span>
+                    <kbd id="shortcut"></kbd>
+                    <button type="button" id="change-shortcut" class="chip-button" data-i18n="shortcutChange">Change</button>
+                </div>
+            </div>
+        </fieldset>
+
+        <section class="developer">
+            <span class="avatar" aria-hidden="true">MA</span>
+            <span class="dev-text">
+                <strong>Majid Ali</strong>
+                <span data-i18n="developerRole">Full Stack Web Developer · Islamabad, PK</span>
+            </span>
+            <nav class="dev-links">
+                <a href="https://majidev.netlify.app" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="linkPortfolio" aria-label="Portfolio" data-i18n-title="linkPortfolio" title="Portfolio">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3Z"/></svg>
+                </a>
+                <a href="https://github.com/Majid-Ali-Watto/youtube-split-scroll" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="linkRepo" aria-label="GitHub repo" data-i18n-title="linkRepo" title="GitHub repo">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class="solid"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.58 9.58 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg>
+                </a>
+                <a href="https://github.com/Majid-Ali-Watto" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="linkProfile" aria-label="GitHub profile" data-i18n-title="linkProfile" title="GitHub profile">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/majid-ali-074b97245/" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="linkLinkedIn" aria-label="LinkedIn" data-i18n-title="linkLinkedIn" title="LinkedIn">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class="solid"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.83v1.54h.06c.53-1 1.84-2.06 3.79-2.06 4.05 0 4.8 2.66 4.8 6.13V21h-4v-4.9c0-1.17-.02-2.68-1.63-2.68-1.64 0-1.89 1.28-1.89 2.6V21h-4V9.75Z"/></svg>
+                </a>
+            </nav>
+        </section>
+    </main>
 
     <footer>
-        <a href="https://github.com/Majid-Ali-Watto/youtube-split-scroll/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer">Privacy</a>
-        <a href="https://github.com/Majid-Ali-Watto/youtube-split-scroll/blob/main/TERMS.md" target="_blank" rel="noopener noreferrer">Terms</a>
+        <a href="https://github.com/Majid-Ali-Watto/youtube-split-scroll/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer" data-i18n="whatsNew">What's new</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/Majid-Ali-Watto/youtube-split-scroll/blob/main/PRIVACY.md" target="_blank" rel="noopener noreferrer" data-i18n="privacy">Privacy</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/Majid-Ali-Watto/youtube-split-scroll/blob/main/TERMS.md" target="_blank" rel="noopener noreferrer" data-i18n="terms">Terms</a>
     </footer>
+    <script src="settings.js"></script>
     <script src="popup.js"></script>
 </body>
 </html>
