@@ -1,0 +1,33 @@
+# Live smoke tests against youtube.com, weekly and on demand. YouTube changes
+# its markup without notice; a failure here usually means a selector needs
+# updating. Not run on every push: it depends on YouTube being reachable from
+# GitHub's runners (which can hit consent or bot-check pages).
+name: Smoke test (live YouTube)
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
