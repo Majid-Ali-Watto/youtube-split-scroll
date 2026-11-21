@@ -1,0 +1,20 @@
+{
+  "name": "youtube-split-scroll",
+  "version": "1.2.0",
+  "private": true,
+  "description": "Browser extension: YouTube comments in the left column with independent scrolling and a docked player.",
+  "author": "Majid Ali (https://majidev.netlify.app)",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "lint": "web-ext lint",
+    "build": "web-ext build --overwrite-dest --filename youtube-split-scroll-{version}.zip",
+    "test": "playwright test",
+    "test:install": "playwright install chromium",
+    "check-version": "node scripts/check-version.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "web-ext": "^8.10.0"
+  }
+}
