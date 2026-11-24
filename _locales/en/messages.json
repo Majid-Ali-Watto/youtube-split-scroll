@@ -1,0 +1,153 @@
+{
+  "extFullName": {
+    "message": "YouTube Split Scroll: Comments Left & Docked Player",
+    "description": "Full extension name shown in the browser's extension list and the stores."
+  },
+  "extName": {
+    "message": "YouTube Split Scroll",
+    "description": "Short extension name (toolbar tooltip, popup heading)."
+  },
+  "extDescription": {
+    "message": "Comments in the left column with independent scrolling; the player, title and actions dock to the right as you scroll.",
+    "description": "Extension description, max 132 characters."
+  },
+  "commandToggle": {
+    "message": "Turn YouTube Split Scroll on or off",
+    "description": "Keyboard shortcut description."
+  },
+  "badgeOff": {
+    "message": "OFF",
+    "description": "Toolbar badge while the extension is disabled. Keep to 4 characters or fewer."
+  },
+  "stateOn": {
+    "message": "On"
+  },
+  "stateOff": {
+    "message": "Off"
+  },
+  "jumpToVideo": {
+    "message": "Back to video",
+    "description": "Floating button that scrolls the left column back to the player."
+  },
+  "jumpToComments": {
+    "message": "Comments",
+    "description": "Floating button that scrolls the left column to the comments."
+  },
+  "dividerLabel": {
+    "message": "Resize columns",
+    "description": "Accessible name of the drag handle between the columns."
+  },
+  "dividerTitle": {
+    "message": "Drag to resize the columns. Double-click to reset.",
+    "description": "Tooltip on the drag handle between the columns."
+  },
+  "popupTagline": {
+    "message": "Comments left, independent scrolling, docked player."
+  },
+  "stateGroupLabel": {
+    "message": "Turn YouTube Split Scroll on or off"
+  },
+  "statusOn": {
+    "message": "Active · changes apply instantly"
+  },
+  "statusOff": {
+    "message": "Paused · YouTube looks normal"
+  },
+  "staleTab": {
+    "message": "This YouTube tab is still running the previous version, so your settings won't apply here until it's reloaded."
+  },
+  "reloadTab": {
+    "message": "Reload tab"
+  },
+  "settingsHeading": {
+    "message": "Layout"
+  },
+  "settingDock": {
+    "message": "Dock the player"
+  },
+  "settingDockParts": {
+    "message": "Dock"
+  },
+  "dockPartsAll": {
+    "message": "Player + details"
+  },
+  "dockPartsPlayer": {
+    "message": "Player only"
+  },
+  "settingJump": {
+    "message": "Jump button"
+  },
+  "settingSwap": {
+    "message": "Suggestions on the left"
+  },
+  "settingHideShorts": {
+    "message": "Hide Shorts"
+  },
+  "settingTheater": {
+    "message": "Theater mode split"
+  },
+  "columnWidth": {
+    "message": "Suggestions width"
+  },
+  "columnWidthDefault": {
+    "message": "Default"
+  },
+  "columnWidthReset": {
+    "message": "Reset"
+  },
+  "columnWidthHint": {
+    "message": "Drag the line between the columns"
+  },
+  "shortcutLabel": {
+    "message": "Shortcut"
+  },
+  "shortcutNone": {
+    "message": "Not set"
+  },
+  "shortcutChange": {
+    "message": "Change"
+  },
+  "developerRole": {
+    "message": "Full Stack Web Developer · Islamabad, PK"
+  },
+  "linkPortfolio": {
+    "message": "Portfolio"
+  },
+  "linkRepo": {
+    "message": "GitHub repo"
+  },
+  "linkProfile": {
+    "message": "GitHub profile"
+  },
+  "linkLinkedIn": {
+    "message": "LinkedIn"
+  },
+  "privacy": {
+    "message": "Privacy"
+  },
+  "terms": {
+    "message": "Terms"
+  },
+  "whatsNew": {
+    "message": "What's new"
+  },
+  "settingDockDesc": {
+    "message": "Keep the video visible while reading"
+  },
+  "settingDockThresholdShort": {
+    "message": "Dock after",
+    "description": "Followed by a slider and a percentage: how much of the player must scroll out of view before it docks."
+  },
+  "settingSwapDesc": {
+    "message": "Video and comments on the right"
+  },
+  "settingJumpDesc": {
+    "message": "Switch between video and comments"
+  },
+  "settingTheaterDesc": {
+    "message": "Columns scroll below the wide player"
+  },
+  "settingHideShortsDesc": {
+    "message": "Remove Shorts from suggestions"
+  }
+}

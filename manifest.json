@@ -1,8 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Split Scroll: Comments Left & Docked Player",
-  "version": "1.1",
-  "description": "Comments in the left column with independent scrolling; the player, title and actions dock to the right as you scroll.",
+  "name": "__MSG_extFullName__",
+  "short_name": "__MSG_extName__",
+  "version": "1.2.0",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
   "homepage_url": "https://majidev.netlify.app",
   "icons": {
     "16": "icons/icon16.png",
@@ -11,15 +13,32 @@
     "128": "icons/icon128.png"
   },
   "action": {
-    "default_title": "YouTube Split Scroll",
+    "default_title": "__MSG_extName__",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png"
     }
   },
+  "background": {
+    "service_worker": "background.js",
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "commands": {
+    "toggle-enabled": {
+      "suggested_key": {
+        "default": "Alt+Shift+Y"
+      },
+      "description": "__MSG_commandToggle__"
+    }
+  },
   "permissions": [
     "storage"
+  ],
+  "host_permissions": [
+    "*://www.youtube.com/*"
   ],
   "content_scripts": [
     {
@@ -30,9 +49,21 @@
         "styles.css"
       ],
       "js": [
+        "settings.js",
         "content.js"
       ],
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "youtube-split-scroll@majidev.netlify.app",
+      "strict_min_version": "121.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  }
 }

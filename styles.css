@@ -4,47 +4,181 @@
  */
 
 /*
- * Watch-page layout: the window never scrolls. The left column (player +
- * comments) and the right column (suggested videos) are independent scroll
- * panes filling the space below the masthead.
+ * Layout classes on <html>, toggled by content.js:
+ *   ycl-split          standard two-column view: the window never scrolls; the
+ *                      left column (player + comments) and the right column
+ *                      (suggestions) are independent scroll panes filling the
+ *                      space below the masthead.
+ *   ycl-theater-split  theater mode (opt-in): the window scrolls the wide
+ *                      player away, the columns below scroll independently.
+ *   ycl-docked         player (and details) docked over the right column.
+ *   ycl-player-only    dock the player only; title and actions stay left.
+ *   ycl-swap           suggestions on the left, video + comments on the right.
+ *   ycl-custom-width   suggestions column width set with the divider.
+ *   ycl-hide-shorts    Shorts hidden from the suggestions.
  *
- * Applies only to the standard two-column view; theater, fullscreen and
- * narrow single-column layouts keep YouTube's default behaviour.
+ * Fullscreen, the narrow single-column layout and (unless enabled) theater
+ * mode keep YouTube's default behaviour.
  */
 
-/* Lock window scroll on watch pages (class toggled by content.js). */
-html.ycl-watch,
-html.ycl-watch body {
+/* Lock window scroll in the split layout. */
+html.ycl-split,
+html.ycl-split body {
     overflow: hidden !important;
 }
 
-html.ycl-watch ytd-watch-flexy[is-two-columns_]:not([theater]):not([fullscreen]) #columns {
+:is(html.ycl-split, html.ycl-theater-split) ytd-watch-flexy #columns {
     height: calc(100vh - var(--ytd-masthead-height, 56px)) !important;
     overflow: hidden !important;
 }
 
-html.ycl-watch ytd-watch-flexy[is-two-columns_]:not([theater]):not([fullscreen]) #primary,
-html.ycl-watch ytd-watch-flexy[is-two-columns_]:not([theater]):not([fullscreen]) #secondary {
+:is(html.ycl-split, html.ycl-theater-split) ytd-watch-flexy #primary,
+:is(html.ycl-split, html.ycl-theater-split) ytd-watch-flexy #secondary {
     height: 100% !important;
     box-sizing: border-box !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
     overscroll-behavior: contain;
+    /* Docking swaps elements for same-size spacers; the browser's scroll
+       anchoring would otherwise "correct" the scroll position mid-swap. */
+    overflow-anchor: none;
     scrollbar-width: thin;
     padding-bottom: 40px !important;
 }
 
+/* Theater split: at the top of a column, keep scrolling up to bring the player back. */
+html.ycl-theater-split ytd-watch-flexy #primary,
+html.ycl-theater-split ytd-watch-flexy #secondary {
+    overscroll-behavior: auto;
+}
+
+/* Swap sides: suggestions left, video + comments right. */
+html.ycl-swap ytd-watch-flexy[is-two-columns_] #columns {
+    flex-direction: row-reverse !important;
+}
+
+html.ycl-swap ytd-watch-flexy[is-two-columns_] #secondary {
+    padding-left: var(--ytd-margin-6x, 24px) !important;
+    padding-right: 0 !important;
+}
+
 /*
- * Docked stack (class toggled by content.js once 90% of the player is scrolled
- * out of the left pane): player, then title, then the channel/subscribe/like
- * row, pinned over the top of the right column at its width. The player's
- * height follows its aspect ratio; content.js publishes each part's height so
- * the parts stack and the right column shrinks by their total, letting
- * suggestions scroll beneath them.
+ * Custom column width (set by dragging the divider). The left column takes
+ * the remaining space; the player keeps YouTube's maximum size so it still
+ * fits the window height, and the comments use the extra width.
  */
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary #player-container-outer,
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title,
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row {
+:is(html.ycl-split, html.ycl-theater-split).ycl-custom-width ytd-watch-flexy #secondary {
+    flex: 0 0 auto !important;
+    width: clamp(300px, var(--ycl-sidebar-w), calc(100% - 512px)) !important;
+    min-width: 0 !important;
+    max-width: none !important;
+}
+
+:is(html.ycl-split, html.ycl-theater-split).ycl-custom-width ytd-watch-flexy #primary {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    max-width: none !important;
+}
+
+html.ycl-split.ycl-custom-width ytd-watch-flexy #primary #player-container-outer {
+    min-width: 0 !important;
+}
+
+/* Divider between the columns (inserted by content.js). */
+#ycl-divider {
+    display: none;
+}
+
+:is(html.ycl-split, html.ycl-theater-split) #ycl-divider {
+    display: block;
+    position: relative;
+    z-index: 2;
+    flex: 0 0 12px;
+    align-self: stretch;
+    margin: 0 -6px;
+    cursor: col-resize;
+    touch-action: none;
+    outline: none;
+}
+
+#ycl-divider::after {
+    content: "";
+    position: absolute;
+    top: 12px;
+    bottom: 12px;
+    left: 5px;
+    width: 2px;
+    border-radius: 1px;
+    background: transparent;
+    transition: background-color 0.15s;
+}
+
+#ycl-divider:hover::after,
+#ycl-divider:focus-visible::after,
+html.ycl-resizing #ycl-divider::after {
+    background: var(--yt-spec-text-secondary, #909090);
+}
+
+html.ycl-resizing,
+html.ycl-resizing * {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
+
+/* Hide Shorts in the suggestions (and anywhere else on the watch page). */
+html.ycl-hide-shorts ytd-watch-flexy :is(
+    ytd-reel-shelf-renderer,
+    ytm-shorts-lockup-view-model,
+    ytm-shorts-lockup-view-model-v2,
+    grid-shelf-view-model:has(ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2, a[href^="/shorts/"]),
+    ytd-compact-video-renderer:has(a[href^="/shorts/"]),
+    ytd-video-renderer:has(a[href^="/shorts/"]),
+    yt-lockup-view-model:has(a[href^="/shorts/"])
+) {
+    display: none !important;
+}
+
+/* "Comments" / "Back to video" button (created by content.js). */
+#ycl-jump {
+    display: none;
+}
+
+html.ycl-split #ycl-jump:not([hidden]) {
+    display: inline-flex;
+    align-items: center;
+    position: fixed;
+    bottom: 20px;
+    left: var(--ycl-jump-x, 50%);
+    z-index: 2100;
+    transform: translateX(-50%);
+    height: 36px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 18px;
+    background: var(--yt-spec-text-primary, #0f0f0f);
+    color: var(--yt-spec-base-background, #fff);
+    font: 500 14px/36px Roboto, Arial, sans-serif;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+html.ycl-split #ycl-jump:hover,
+html.ycl-split #ycl-jump:focus-visible {
+    opacity: 1;
+}
+
+/*
+ * Docked stack (class toggled by content.js once the dock threshold of the
+ * player is scrolled out of the left pane): player, then title, then the
+ * channel/subscribe/like row (unless ycl-player-only), pinned over the top of
+ * the right column at its width. The player's height follows its aspect
+ * ratio; content.js publishes each part's height so the parts stack and the
+ * right column shrinks by their total, letting suggestions scroll beneath them.
+ */
+html.ycl-docked ytd-watch-flexy #primary #player-container-outer,
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #title,
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row {
     position: fixed !important;
     left: var(--ycl-dock-left) !important;
     width: var(--ycl-dock-width) !important;
@@ -55,27 +189,27 @@ html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row {
     z-index: 1;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary #player-container-outer {
+html.ycl-docked ytd-watch-flexy #primary #player-container-outer {
     top: var(--ycl-dock-top) !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary #player-container-inner {
+html.ycl-docked ytd-watch-flexy #primary #player-container-inner {
     min-width: 0 !important;
     min-height: 0 !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title,
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #title,
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row {
     padding: 8px 0 0 !important;
     /* Nothing scrolls beneath the stack, so the page background shows through. */
     background: transparent !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #title {
     top: calc(var(--ycl-dock-top) + var(--ycl-player-h, 0px)) !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row {
     top: calc(var(--ycl-dock-top) + var(--ycl-player-h, 0px) + var(--ycl-title-h, 0px)) !important;
     /* Channel, Subscribe and buttons on a single row. */
     flex-wrap: nowrap !important;
@@ -86,7 +220,7 @@ html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row {
 }
 
 /* Docked title: match the suggested-video titles in the right column. */
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title h1 {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #title h1 {
     font-size: 1.4rem !important;
     line-height: 2rem !important;
     font-weight: 500 !important;
@@ -97,7 +231,7 @@ html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title h1 
  * children, not #top-row itself, so the fixed position and width variables
  * aren't scaled too.
  */
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row > * {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row > * {
     zoom: 0.85;
 }
 
@@ -105,42 +239,42 @@ html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row >
  * Single row in the narrow column: the channel block may shrink (its name and
  * subscriber count truncate), the buttons keep their size at the right end.
  */
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner {
     flex: 1 1 auto !important;
     min-width: 0 !important;
     margin-right: 0 !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #upload-info {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #upload-info {
     min-width: 0 !important;
     overflow: hidden !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #upload-info * {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #upload-info * {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions {
     flex: 0 0 auto !important;
     min-width: 0 !important;
     margin: 0 !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions-inner,
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions ytd-menu-renderer {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions-inner,
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions ytd-menu-renderer {
     margin: 0 !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy[is-two-columns_]:not([theater]):not([fullscreen]) #secondary {
+html.ycl-docked ytd-watch-flexy #secondary {
     --ycl-stack-h: calc(var(--ycl-player-h, 0px) + var(--ycl-title-h, 0px) + var(--ycl-toprow-h, 0px));
     margin-top: var(--ycl-stack-h) !important;
     height: calc(100% - var(--ycl-stack-h)) !important;
 }
 
 /* Docked Subscribe button: compact pill like YouTube's small buttons. */
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #subscribe-button button {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #subscribe-button button {
     height: 28px !important;
     padding: 0 12px !important;
     font-size: 1.2rem !important;
@@ -148,7 +282,7 @@ html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #
 }
 
 /* Docked like/dislike, share, download and menu buttons: compact, matching Subscribe. */
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row button:not(#subscribe-button button) {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row button:not(#subscribe-button button) {
     height: 28px !important;
     min-width: 28px !important;
     padding: 0 10px !important;
@@ -156,23 +290,23 @@ html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row b
     line-height: 28px !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row button:not(#subscribe-button button).yt-spec-button-shape-next--icon-button {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row button:not(#subscribe-button button).yt-spec-button-shape-next--icon-button {
     width: 28px !important;
     padding: 0 !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row button:not(#subscribe-button button) .yt-spec-button-shape-next__icon {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row button:not(#subscribe-button button) .yt-spec-button-shape-next__icon {
     width: 18px !important;
     height: 18px !important;
 }
 
 /* Docked title: at most two lines, ending with an ellipsis. */
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title h1 {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #title h1 {
     max-height: 4rem !important; /* 2 lines x 2rem line-height */
     overflow: hidden !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title h1 yt-formatted-string {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #title h1 yt-formatted-string {
     display: -webkit-box !important;
     -webkit-box-orient: vertical !important;
     -webkit-line-clamp: 2 !important;
@@ -182,40 +316,40 @@ html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #title h1 
 }
 
 /* Docked channel avatar: compact, matching the smaller buttons. */
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #avatar,
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #avatar img {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #avatar,
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #avatar img {
     width: 28px !important;
     height: 28px !important;
     min-width: 28px !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #avatar {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner #avatar {
     margin-right: 8px !important;
 }
 
 /* Docked buttons are icon-only: hide the like count and any button labels. */
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row .yt-spec-button-shape-next__button-text-content:not(#subscribe-button *) {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row .yt-spec-button-shape-next__button-text-content:not(#subscribe-button *) {
     display: none !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row button:not(#subscribe-button button) .yt-spec-button-shape-next__icon {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row button:not(#subscribe-button button) .yt-spec-button-shape-next__icon {
     margin: 0 !important;
 }
 
 /* Docked channel row: center every item vertically on the row's midline. */
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner,
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row ytd-video-owner-renderer,
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions,
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions-inner,
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions ytd-menu-renderer,
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #top-level-buttons-computed {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner,
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row ytd-video-owner-renderer,
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions,
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions-inner,
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #actions ytd-menu-renderer,
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #top-level-buttons-computed {
     display: flex !important;
     align-items: center !important;
 }
 
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner > *,
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row ytd-video-owner-renderer > *,
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #subscribe-button {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #owner > *,
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row ytd-video-owner-renderer > *,
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row #subscribe-button {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
 }
@@ -224,7 +358,7 @@ html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row #
  * Center the row's direct children (channel block, buttons block) whatever
  * YouTube names them, and drop their own vertical margins/offsets.
  */
-html.ycl-watch.ycl-docked ytd-watch-flexy #primary ytd-watch-metadata #top-row > * {
+html.ycl-docked:not(.ycl-player-only) ytd-watch-flexy #primary ytd-watch-metadata #top-row > * {
     align-self: center !important;
     margin-top: 0 !important;
     margin-bottom: 0 !important;

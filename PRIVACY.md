@@ -1,7 +1,7 @@
 # Privacy Policy
 
 **YouTube Split Scroll: Comments Left & Docked Player**
-Last updated: 16 November 2026
+Last updated: 21 November 2026
 
 ## Summary
 
@@ -19,15 +19,17 @@ you are already viewing.
 - **Collected:** none. The extension does not read your account, watch history,
   comments or any other content for any purpose beyond positioning page
   elements.
-- **Stored:** one on/off setting (whether the extension is enabled), kept in
-  your browser's local extension storage so your choice is remembered. It stays
-  on your device and contains no personal information. The extension uses no
-  cookies.
+- **Stored:** your settings only: the on/off switch and layout preferences
+  (docking options, column width, swap sides, hide Shorts, theater split),
+  kept in your browser's local extension storage so your choices are
+  remembered. They stay on your device and contain no personal information.
+  The extension uses no cookies.
 - **Sent anywhere:** nothing. It makes no network requests, has no analytics
   or tracking, and uses no remote code or third-party services.
-- **Permissions:** `storage`, used only to remember the on/off setting above.
-  The extension also injects its script and stylesheet into YouTube watch pages
-  (`www.youtube.com`).
+- **Permissions:** `storage`, used only to remember the settings above, and
+  access to `www.youtube.com`, used to inject the extension's script and
+  stylesheet into YouTube pages and, when you open the popup on a YouTube tab,
+  to check whether that tab needs a reload after an update.
 
 ## Links
 
